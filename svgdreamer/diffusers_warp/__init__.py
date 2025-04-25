@@ -199,7 +199,8 @@ def init_diffusers_unet(model_id: AnyStr,
                         enable_xformers: bool = True,
                         gradient_checkpoint: bool = False,
                         lora_path: AnyStr = None,
-                        unet_path: AnyStr = None):
+                        unet_path: AnyStr = None,
+                        use_kagglehub: bool = False):
     """
     A tool for initial diffusers UNet model.
 
@@ -220,18 +221,28 @@ def init_diffusers_unet(model_id: AnyStr,
             diffusers.UNet
     """
 
-    # get model id
-    model_id = DiffusersModels.get(model_id, model_id)
+    if use_kagglehub:
+        model_id = DiffusersModelsInKaggleHub.get(model_id, model_id)
+        import kagglehub
+        stable_diffusion_path = kagglehub.model_download(model_id)
+        unet = UNet2DConditionModel.from_pretrained(
+            stable_diffusion_path,
+            subfolder="unet",
+            torch_dtype=torch_dtype,
+        ).to(device)
+    else:
+        # get model id
+        model_id = DiffusersModels.get(model_id, model_id)
 
-    # process UNet model
-    unet = UNet2DConditionModel.from_pretrained(
-        model_id,
-        subfolder="unet",
-        torch_dtype=torch_dtype,
-        local_files_only=local_files_only,
-        force_download=force_download,
-        resume_download=resume_download,
-    ).to(device)
+        # process UNet model
+        unet = UNet2DConditionModel.from_pretrained(
+            model_id,
+            subfolder="unet",
+            torch_dtype=torch_dtype,
+            local_files_only=local_files_only,
+            force_download=force_download,
+            resume_download=resume_download,
+        ).to(device)
 
     print(f"load diffusers UNet: {model_id}")
 

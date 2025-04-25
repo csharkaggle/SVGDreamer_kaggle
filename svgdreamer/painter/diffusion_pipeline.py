@@ -36,7 +36,7 @@ class DiffusionPipeline(torch.nn.Module):
             "gradient_checkpoint": model_cfg.gradient_checkpoint,
             "cpu_offload": model_cfg.cpu_offload,
             "vae_slicing": False,
-            "use_kagglehub": model_cfg.use_kagglehub
+            "use_kagglehub": diffuser_cfg.use_kagglehub
         }
 
         # load pretrained model
