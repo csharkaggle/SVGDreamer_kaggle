@@ -20,6 +20,15 @@ DiffusersModels = OrderedDict({
     "sdxl": "stabilityai/stable-diffusion-xl-base-1.0",  # resolution: 1024
 })
 
+DiffusersModelsInKaggleHub = OrderedDict({
+    #"sd14": "CompVis/stable-diffusion-v1-4",  # resolution: 512
+    #"sd15": "runwayml/stable-diffusion-v1-5",  # resolution: 512
+    "sd21b": "stabilityai/stable-diffusion-v2/pytorch/1-base/1",  # resolution: 512
+    "sd21": "stabilityai/stable-diffusion-v2/pytorch/1/1",  # resolution: 768
+    "sdxl": "stabilityai/stable-diffusion-xl/pytorch/base-1-0/1",  # resolution: 1024
+})
+
+
 # default resolution
 _model2resolution = {
     "sd14": 512,
@@ -42,6 +51,7 @@ def init_StableDiffusion_pipeline(model_id: AnyStr,
                                   local_files_only: bool = True,
                                   force_download: bool = False,
                                   resume_download: bool = False,
+                                  use_kagglehub: bool = False,
                                   ldm_speed_up: bool = False,
                                   enable_xformers: bool = True,
                                   gradient_checkpoint: bool = False,
@@ -74,30 +84,54 @@ def init_StableDiffusion_pipeline(model_id: AnyStr,
     """
 
     # get model id
-    model_id = DiffusersModels.get(model_id, model_id)
+    if use_kagglehub:
+        import kagglehub
+        model_id = DiffusersModelsInKaggleHub.get(model_id, model_id)
+        stable_diffusion_path = kagglehub.model_download(model_id)
 
-    # process diffusion model
-    if custom_scheduler is not None:
-        pipeline = custom_pipeline.from_pretrained(
-            model_id,
-            torch_dtype=torch_dtype,
-            local_files_only=local_files_only,
-            force_download=force_download,
-            resume_download=resume_download,
-            scheduler=custom_scheduler.from_pretrained(model_id,
-                                                       subfolder="scheduler",
-                                                       local_files_only=local_files_only,
-                                                       force_download=force_download,
-                                                       resume_download=resume_download)
-        ).to(device)
+        if custom_scheduler is not None:
+            custom_pipeline.from_pretrained(
+                stable_diffusion_path,
+                torch_dtype=torch_dtype,
+                scheduler = custom_scheduler.from_pretrained(
+                    stable_diffusion_path, 
+                    subfolder="scheduler",
+                ),
+                safety_checker=None 
+            ).to(device)
+        else:
+            custom_pipeline.from_pretrained(
+                stable_diffusion_path,
+                torch_dtype=torch_dtype,
+                safety_checker=None 
+            ).to(device)
+
+
     else:
-        pipeline = custom_pipeline.from_pretrained(
-            model_id,
-            torch_dtype=torch_dtype,
-            local_files_only=local_files_only,
-            force_download=force_download,
-            resume_download=resume_download,
-        ).to(device)
+        model_id = DiffusersModels.get(model_id, model_id)
+
+        # process diffusion model
+        if custom_scheduler is not None:
+            pipeline = custom_pipeline.from_pretrained(
+                model_id,
+                torch_dtype=torch_dtype,
+                local_files_only=local_files_only,
+                force_download=force_download,
+                resume_download=resume_download,
+                scheduler=custom_scheduler.from_pretrained(model_id,
+                                                        subfolder="scheduler",
+                                                        local_files_only=local_files_only,
+                                                        force_download=force_download,
+                                                        resume_download=resume_download)
+            ).to(device)
+        else:
+            pipeline = custom_pipeline.from_pretrained(
+                model_id,
+                torch_dtype=torch_dtype,
+                local_files_only=local_files_only,
+                force_download=force_download,
+                resume_download=resume_download,
+            ).to(device)
 
     print(f"load diffusers pipeline: {model_id}")
 
