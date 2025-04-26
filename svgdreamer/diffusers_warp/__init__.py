@@ -90,7 +90,7 @@ def init_StableDiffusion_pipeline(model_id: AnyStr,
         stable_diffusion_path = kagglehub.model_download(model_id)
 
         if custom_scheduler is not None:
-            custom_pipeline.from_pretrained(
+            pipeline = custom_pipeline.from_pretrained(
                 stable_diffusion_path,
                 torch_dtype=torch_dtype,
                 scheduler = custom_scheduler.from_pretrained(
@@ -100,7 +100,7 @@ def init_StableDiffusion_pipeline(model_id: AnyStr,
                 safety_checker=None 
             ).to(device)
         else:
-            custom_pipeline.from_pretrained(
+            pipeline = custom_pipeline.from_pretrained(
                 stable_diffusion_path,
                 torch_dtype=torch_dtype,
                 safety_checker=None 
