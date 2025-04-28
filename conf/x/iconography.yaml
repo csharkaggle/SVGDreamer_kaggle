@@ -145,7 +145,7 @@ vpsd:
   t_schedule: 'max_0.5_1500' # or 'randint'
   # phi model config
   phi_single: False # if False new an unet model to estimate noise
-  phi_model: 'lora' # 'lora', 'unet_simple'
+  phi_model: 'unet_simple' # 'lora', 'unet_simple'
   use_attn_scale: ${x.vpsd.phi_single} # use lora_attn_scale or not
   lora_attn_scale: 1.0 # the scale of the attn based lora layer
   phi_guidance_scale: 1.0

@@ -5,12 +5,12 @@ style: "iconography" # "iconography", "pixelart", "low-poly", "painting", "sketc
 
 # stable diffusion in SIVE stage
 sive_model_cfg:
-  model_id: "sd21b" # sd14, sd15, sd21, sd21b, sdxl
+  model_id: "sdxl" # sd14, sd15, sd21, sd21b, sdxl
   ldm_speed_up: False
   enable_xformers: True
   gradient_checkpoint: False
   cpu_offload: True
-  vae_sliceing: True
+  vae_slicing: True
   num_inference_steps: 100
   guidance_scale: 7.5 # sdxl default 5.0
   lora_path: ~
@@ -146,7 +146,7 @@ vpsd:
   t_schedule: 'max_0.5_1500' # or 'randint'
   # phi model config
   phi_single: False # if False new an unet model to estimate noise
-  phi_model: 'lora' # 'lora', 'unet_simple'
+  phi_model: 'unet_simple' # 'lora', 'unet_simple'
   use_attn_scale: ${x.vpsd.phi_single} # use lora_attn_scale or not
   lora_attn_scale: 1.0 # the scale of the attn based lora layer
   phi_guidance_scale: 1.0
