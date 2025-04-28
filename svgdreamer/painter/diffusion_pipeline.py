@@ -35,7 +35,7 @@ class DiffusionPipeline(torch.nn.Module):
             "enable_xformers": model_cfg.enable_xformers,
             "gradient_checkpoint": model_cfg.gradient_checkpoint,
             "cpu_offload": model_cfg.cpu_offload,
-            "vae_slicing": False,
+            "vae_slicing": diffuser_cfg.vae_slicing,
             "use_kagglehub": diffuser_cfg.use_kagglehub
         }
 

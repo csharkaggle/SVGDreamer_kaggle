@@ -19,6 +19,7 @@ diffuser:
   force_download: False
   resume_download: False
   use_kagglehub: True
+  vae_sliceing: True
 
 # PyDiffVG config
 diffvg:

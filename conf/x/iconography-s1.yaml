@@ -10,6 +10,7 @@ sive_model_cfg:
   enable_xformers: True
   gradient_checkpoint: False
   cpu_offload: True
+  vae_sliceing: True
   num_inference_steps: 100
   guidance_scale: 7.5 # sdxl default 5.0
   lora_path: ~
