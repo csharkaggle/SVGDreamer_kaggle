@@ -5,7 +5,7 @@ setup(
     name='svgdreamer',
     version="0.1.0",
     packages=[p for p in find_packages() if p.startswith('svgdreamer') or p.startswith('ImageReward') ],
-    package_data={'pytorch_svgrender': ['py.typed']},
+    package_data={'svgdreamer': ['py.typed']},
     install_requires=[
     ],
     python_requires=">=3.7",
@@ -20,7 +20,7 @@ setup(
         'Generative Models',
         'SVG Generation',
     ],
-    url='https://github.com/ximinng/PyTorch-SVGRender',
+    url='https://github.com/ximinng/SVGDreamer',
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
